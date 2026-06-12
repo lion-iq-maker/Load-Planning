@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ELX Load Planning Discovery Questionnaire</title>
+  <style>
+    :root {
+      --elx-red: #d71920;
+      --elx-dark: #111111;
+      --elx-grey: #f4f4f4;
+      --elx-border: #d9d9d9;
+      --elx-text: #222222;
+      --success: #15803d;
+      --warning: #b45309;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, #111111 0%, #2a2a2a 45%, #d71920 100%);
+      color: var(--elx-text);
+      min-height: 100vh;
+    }
+
+    .page {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 28px 18px 60px;
+    }
+
+    .hero {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 28px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.28);
+      margin-bottom: 18px;
+      border-top: 8px solid var(--elx-red);
+    }
+
+    .brand-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      font-size: 22px;
+      color: var(--elx-dark);
+    }
+
+    .logo-mark {
+      background: var(--elx-red);
+      color: #fff;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-weight: 900;
+    }
+
+    .badge {
+      background: #111;
+      color: #fff;
+      padding: 9px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+    }
+
+    h1 {
+      margin: 22px 0 10px;
+      font-size: 34px;
+      line-height: 1.15;
+    }
+
+    .subtitle {
+      max-width: 820px;
+      line-height: 1.55;
+      color: #555;
+      margin: 0;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .sidebar, .card {
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+    }
+
+    .sidebar {
+      padding: 18px;
+      position: sticky;
+      top: 18px;
+    }
+
+    .progress-box {
+      margin-bottom: 18px;
+    }
+
+    .progress-title {
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .progress-track {
+      height: 12px;
+      background: #eee;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: var(--elx-red);
+      transition: width 0.25s ease;
+    }
+
+    .progress-text {
+      margin-top: 8px;
+      font-size: 13px;
+      color: #555;
+    }
+
+    .steps {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .steps li {
+      padding: 11px 12px;
+      border-radius: 10px;
+      margin-bottom: 7px;
+      font-size: 14px;
+      border: 1px solid transparent;
+      color: #444;
+    }
+
+    .steps li.active {
+      background: #fff1f1;
+      color: var(--elx-red);
+      border-color: #ffd0d0;
+      font-weight: 700;
+    }
+
+    .steps li.done {
+      background: #ecfdf3;
+      color: var(--success);
+    }
+
+    .card {
+      padding: 26px;
+      min-height: 640px;
+    }
+
+    .section {
+      display: none;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 26px;
+      color: #111;
+    }
+
+    .section-help {
+      background: #f8f8f8;
+      border-left: 5px solid var(--elx-red);
+      padding: 13px 16px;
+      border-radius: 10px;
+      color: #444;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .field {
+      margin-bottom: 17px;
+    }
+
+    label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 7px;
+      color: #222;
+    }
+
+    .hint {
+      display: block;
+      color: #666;
+      font-size: 12px;
+      margin-top: -3px;
+      margin-bottom: 7px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid var(--elx-border);
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: inherit;
+      background: #fff;
+    }
+
+    textarea {
+      min-height: 96px;
+      resize: vertical;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: 2px solid rgba(215,25,32,0.18);
+      border-color: var(--elx-red);
+    }
+
+    .check-group {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .check-item {
+      border: 1px solid var(--elx-border);
+      padding: 10px 11px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      background: #fff;
+      font-weight: 500;
+    }
+
+    .check-item input {
+      width: auto;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 24px;
+      border-top: 1px solid #eee;
+      padding-top: 18px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: none;
+      border-radius: 11px;
+      padding: 12px 18px;
+      font-weight: 800;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .btn-primary {
+      background: var(--elx-red);
+      color: white;
+    }
+
+    .btn-dark {
+      background: #111;
+      color: white;
+    }
+
+    .btn-light {
+      background: #f1f1f1;
+      color: #111;
+    }
+
+    .btn-success {
+      background: var(--success);
+      color: #fff;
+    }
+
+    .btn-warning {
+      background: var(--warning);
+      color: #fff;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .notice {
+      display: none;
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: #ecfdf3;
+      color: #14532d;
+      border: 1px solid #bbf7d0;
+      font-weight: 700;
+    }
+
+    .review-box {
+      background: #f8f8f8;
+      border: 1px solid #e5e5e5;
+      padding: 18px;
+      border-radius: 14px;
+      margin-top: 12px;
+      white-space: pre-wrap;
+      line-height: 1.55;
+      max-height: 520px;
+      overflow: auto;
+    }
+
+    .footer-note {
+      color: #fff;
+      opacity: 0.9;
+      text-align: center;
+      margin-top: 20px;
+      font-size: 13px;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+      }
+
+      .grid, .check-group {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 27px;
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+      }
+
+      .hero, .sidebar, .actions, .footer-note {
+        display: none !important;
+      }
+
+      .layout {
+        display: block;
+      }
+
+      .card {
+        box-shadow: none;
+        padding: 0;
+      }
+
+      .section {
+        display: none !important;
+      }
+
+      #section-review {
+        display: block !important;
+      }
+
+      .review-box {
+        max-height: none;
+        overflow: visible;
+        border: none;
+        padding: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <div class="brand-row">
+        <div class="logo"><span class="logo-mark">ELX</span> Load Planning Discovery</div>
+        <div class="badge">Business Analysis Questionnaire</div>
+      </div>
+      <h1>End-to-End Load Planning Process Discovery</h1>
+      <p class="subtitle">
+        Use this form to capture current-state process, stakeholders, systems, compliance checks, pain points, and future-state requirements for a professional load planning solution.
+      </p>
+    </header>
+
+    <main class="layout">
+      <aside class="sidebar">
+        <div class="progress-box">
+          <div class="progress-title">Progress</div>
+          <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+          <div class="progress-text" id="progressText">Section 1 of 10</div>
+        </div>
+        <ol class="steps" id="steps">
+          <li class="active">1. Respondent</li>
+          <li>2. Business Context</li>
+          <li>3. Current Process</li>
+          <li>4. Stakeholders</li>
+          <li>5. Vehicle & Trailer</li>
+          <li>6. Cargo Details</li>
+          <li>7. Compliance</li>
+          <li>8. Warehouse & Dispatch</li>
+          <li>9. Pain Points</li>
+          <li>10. Future State</li>
+          <li>11. Review & Export</li>
+        </ol>
+      </aside>
+
+      <section class="card">
+        <form id="discoveryForm">
+
+          <div class="section active">
+            <h2>1. Respondent Details</h2>
+            <div class="section-help">Capture who completed this discovery questionnaire so the BA team can follow up if needed.</div>
+            <div class="grid">
+              <div class="field">
+                <label>Your Name</label>
+                <input name="Respondent Name" placeholder="e.g. Rahul Tamang" required />
+              </div>
+              <div class="field">
+                <label>Your Role</label>
+                <input name="Respondent Role" placeholder="e.g. Transport Coordinator" />
+              </div>
+              <div class="field">
+                <label>Department / Team</label>
+                <input name="Department" placeholder="e.g. Operations / Fleet / Warehouse" />
+              </div>
+              <div class="field">
+                <label>Email</label>
+                <input name="Email" type="email" placeholder="name@company.com" />
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <h2>2. Business Context</h2>
+            <div class="section-help">Understand the transport operation, regions, freight types, and planning volume.</div>
+            <div class="field">
+              <label>What type of transport operations are performed?</label>
+              <div class="check-group">
+                <label class="check-item"><input type="checkbox" name="Transport Operations" value="General Freight"> General Freight</label>
+                <label class="check-item"><input type="checkbox" name="Transport Operations" value="Mining Logistics"> Mining Logistics</label>
+                <label class="check-item"><input type="checkbox" name="Transport Operations" value="Hotshot / Urgent Freight"> Hotshot / Urgent Freight</label>
+                <label class="check-item"><input type="checkbox" name="Transport Operations" value="Dedicated Fleet"> Dedicated Fleet</label>
+                <label class="check-item"><input type="checkbox" name="Transport Operations" value="Dangerous Goods"> Dangerous Goods</label>
+                <label class="check-item"><input type="checkbox" name="Transport Operations" value="Oversize / Overmass"> Oversize / Overmass</label>
+                <label class="check-item"><input type="checkbox" name="Transport Operations" value="Containers"> Containers</label>
+                <label class="check-item"><input type="checkbox" name="Transport Operations" value="Multi-stop Deliveries"> Multi-stop Deliveries</label>
+              </div>
+            </div>
+            <div class="grid">
+              <div class="field">
+                <label>Regions serviced</label>
+                <input name="Regions Serviced" placeholder="e.g. Adelaide Metro, SA Regional, Interstate" />
+              </div>
+              <div class="field">
+                <label>Approx. loads planned per day</label>
+                <input name="Loads Per Day" placeholder="e.g. 20-30" />
+              </div>
+              <div class="field">
+                <label>Approx. fleet size</label>
+                <input name="Fleet Size" placeholder="e.g. 45 vehicles" />
+              </div>
+              <div class="field">
+                <label>Main customer types</label>
+                <input name="Customer Types" placeholder="e.g. Mining, Oil & Gas, General freight" />
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <h2>3. Current As-Is Process</h2>
+            <div class="section-help">Describe how load planning works today from booking received to dispatch.</div>
+            <div class="field">
+              <label>What triggers the load planning process?</label>
+              <textarea name="Load Planning Trigger" placeholder="e.g. Customer email, booking request, TMS job, phone call"></textarea>
+            </div>
+            <div class="field">
+              <label>Describe the current process step-by-step</label>
+              <textarea name="Current Process Steps" placeholder="Step 1: Booking received&#10;Step 2: Freight details checked&#10;Step 3: Vehicle selected..."></textarea>
+            </div>
+            <div class="field">
+              <label>Which systems/tools are currently used?</label>
+              <div class="check-group">
+                <label class="check-item"><input type="checkbox" name="Systems Used" value="Outlook / Email"> Outlook / Email</label>
+                <label class="check-item"><input type="checkbox" name="Systems Used" value="Excel"> Excel</label>
+                <label class="check-item"><input type="checkbox" name="Systems Used" value="TMS"> TMS</label>
+                <label class="check-item"><input type="checkbox" name="Systems Used" value="ERP"> ERP</label>
+                <label class="check-item"><input type="checkbox" name="Systems Used" value="SharePoint"> SharePoint</label>
+                <label class="check-item"><input type="checkbox" name="Systems Used" value="Paper / Whiteboard"> Paper / Whiteboard</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <h2>4. Stakeholders & Decisions</h2>
+            <div class="section-help">Identify who is involved, who makes decisions, and who approves dispatch.</div>
+            <div class="grid">
+              <div class="field">
+                <label>Who creates the load plan?</label>
+                <input name="Load Plan Creator" />
+              </div>
+              <div class="field">
+                <label>Who selects the vehicle/trailer?</label>
+                <input name="Vehicle Selector" />
+              </div>
+              <div class="field">
+                <label>Who checks compliance?</label>
+                <input name="Compliance Checker" />
+              </div>
+              <div class="field">
+                <label>Who approves dispatch?</label>
+                <input name="Dispatch Approver" />
+              </div>
+            </div>
+            <div class="field">
+              <label>List all stakeholders involved</label>
+              <textarea name="Stakeholders" placeholder="e.g. Planner, Fleet Controller, Warehouse Supervisor, Driver, Compliance Officer, Customer Service"></textarea>
+            </div>
+            <div class="field">
+              <label>What decisions are made during load planning?</label>
+              <textarea name="Planning Decisions" placeholder="e.g. vehicle choice, trailer choice, load sequence, restraint requirements, route suitability"></textarea>
+            </div>
+          </div>
+
+          <div class="section">
+            <h2>5. Vehicle & Trailer Selection</h2>
+            <div class="section-help">Capture how the correct asset is selected and what constraints matter.</div>
+            <div class="field">
+              <label>Vehicle/trailer types used</label>
+              <div class="check-group">
+                <label class="check-item"><input type="checkbox" name="Vehicle Types" value="Rigid Truck"> Rigid Truck</label>
+                <label class="check-item"><input type="checkbox" name="Vehicle Types" value="Flat Top"> Flat Top</label>
+                <label class="check-item"><input type="checkbox" name="Vehicle Types" value="Curtainsider"> Curtainsider</label>
+                <label class="check-item"><input type="checkbox" name="Vehicle Types" value="Semi Trailer"> Semi Trailer</label>
+                <label class="check-item"><input type="checkbox" name="Vehicle Types" value="B-Double"> B-Double</label>
+                <label class="check-item"><input type="checkbox" name="Vehicle Types" value="Road Train"> Road Train</label>
+                <label class="check-item"><input type="checkbox" name="Vehicle Types" value="Drop Deck"> Drop Deck</label>
+                <label class="check-item"><input type="checkbox" name="Vehicle Types" value="Extendable"> Extendable</label>
+              </div>
+            </div>
+            <div class="field">
+              <label>How is the vehicle/trailer selected today?</label>
+              <textarea name="Vehicle Selection Method"></textarea>
+            </div>
+            <div class="field">
+              <label>What factors influence vehicle selection?</label>
+              <textarea name="Vehicle Selection Factors" placeholder="e.g. payload, deck length, availability, customer requirement, route, cost, driver availability"></textarea>
+            </div>
+          </div>
+
+          <div class="section">
+            <h2>6. Cargo & Freight Details</h2>
+            <div class="section-help">Capture what freight information is required to create a safe and optimised load plan.</div>
+            <div class="field">
+              <label>What cargo details are normally received?</label>
+              <div class="check-group">
+                <label class="check-item"><input type="checkbox" name="Cargo Details Received" value="Weight"> Weight</label>
+                <label class="check-item"><input type="checkbox" name="Cargo Details Received" value="Dimensions"> Dimensions</label>
+                <label class="check-item"><input type="checkbox" name="Cargo Details Received" value="Quantity"> Quantity</label>
+                <label class="check-item"><input type="checkbox" name="Cargo Details Received" value="Pallet Count"> Pallet Count</label>
+                <label class="check-item"><input type="checkbox" name="Cargo Details Received" value="Stackability"> Stackability</label>
+                <label class="check-item"><input type="checkbox" name="Cargo Details Received" value="Dangerous Goods"> Dangerous Goods</label>
+                <label class="check-item"><input type="checkbox" name="Cargo Details Received" value="Delivery Sequence"> Delivery Sequence</label>
+                <label class="check-item"><input type="checkbox" name="Cargo Details Received" value="Special Instructions"> Special Instructions</label>
+              </div>
+            </div>
+            <div class="field">
+              <label>What cargo details are often missing or inaccurate?</label>
+              <textarea name="Missing Cargo Details"></textarea>
+            </div>
+            <div class="field">
+              <label>What freight types are hardest to plan?</label>
+              <textarea name="Hardest Freight Types" placeholder="e.g. mixed freight, heavy crates, long pipe, machinery, DG, multi-drop freight"></textarea>
+            </div>
+          </div>
+
+          <div class="section">
+            <h2>7. Compliance & Safety Checks</h2>
+            <div class="section-help">Identify safety, NHVR, load restraint, mass/dimension, and Chain of Responsibility checks.</div>
+            <div class="field">
+              <label>Which compliance checks are performed?</label>
+              <div class="check-group">
+                <label class="check-item"><input type="checkbox" name="Compliance Checks" value="Payload / Gross Weight"> Payload / Gross Weight</label>
+                <label class="check-item"><input type="checkbox" name="Compliance Checks" value="Axle Weights"> Axle Weights</label>
+                <label class="check-item"><input type="checkbox" name="Compliance Checks" value="Load Restraint"> Load Restraint</label>
+                <label class="check-item"><input type="checkbox" name="Compliance Checks" value="Height / Width / Length"> Height / Width / Length</label>
+                <label class="check-item"><input type="checkbox" name="Compliance Checks" value="Dangerous Goods"> Dangerous Goods</label>
+                <label class="check-item"><input type="checkbox" name="Compliance Checks" value="Route / Permit"> Route / Permit</label>
+                <label class="check-item"><input type="checkbox" name="Compliance Checks" value="Centre of Gravity"> Centre of Gravity</label>
+                <label class="check-item"><input type="checkbox" name="Compliance Checks" value="Chain of Responsibility"> Chain of Responsibility</label>
+              </div>
+            </div>
+            <div class="field">
+              <label>Which compliance checks are difficult or manual?</label>
+              <textarea name="Difficult Compliance Checks"></textarea>
+            </div>
+            <div class="field">
+              <label>What safety issues or near misses have occurred due to load planning?</label>
+              <textarea name="Safety Issues"></textarea>
+            </div>
+          </div>
+
+          <div class="section">
+            <h2>8. Warehouse, Loading & Dispatch</h2>
+            <div class="section-help">Understand how the physical loading team receives instructions and executes the plan.</div>
+            <div class="field">
+              <label>How does the warehouse know where freight should go?</label>
+              <textarea name="Warehouse Instructions Today"></textarea>
+            </div>
+            <div class="field">
+              <label>Are loading instructions documented?</label>
+              <select name="Loading Instructions Documented">
+                <option value="">Select</option>
+                <option>Yes</option>
+                <option>No</option>
+                <option>Sometimes</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>How often are loads adjusted or reworked before dispatch?</label>
+              <select name="Load Rework Frequency">
+                <option value="">Select</option>
+                <option>Rarely</option>
+                <option>Sometimes</option>
+                <option>Often</option>
+                <option>Very Often</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>What documents/instructions should the driver receive?</label>
+              <textarea name="Driver Instructions Needed" placeholder="e.g. load plan, delivery sequence, restraint notes, DG docs, route notes"></textarea>
+            </div>
+          </div>
+
+          <div class="section">
+            <h2>9. Pain Points & Root Causes</h2>
+            <div class="section-help">Capture the key business problems that the future solution must solve.</div>
+            <div class="field">
+              <label>Top 5 current pain points</label>
+              <textarea name="Top Pain Points" placeholder="1.&#10;2.&#10;3.&#10;4.&#10;5."></textarea>
+            </div>
+            <div class="field">
+              <label>Most time-consuming activity</label>
+              <textarea name="Most Time Consuming Activity"></textarea>
+            </div>
+            <div class="field">
+              <label>Most common planning mistakes</label>
+              <textarea name="Common Mistakes"></textarea>
+            </div>
+            <div class="field">
+              <label>What is the likely root cause?</label>
+              <textarea name="Likely Root Causes" placeholder="e.g. missing freight dimensions, manual calculations, no standard checklist, system gaps"></textarea>
+            </div>
+          </div>
+
+          <div class="section">
+            <h2>10. Future State & Automation Opportunities</h2>
+            <div class="section-help">Define what a better future process and load planning solution should do.</div>
+            <div class="field">
+              <label>What should the ideal load planning system do?</label>
+              <textarea name="Ideal System Capabilities"></textarea>
+            </div>
+            <div class="field">
+              <label>What decisions should the system automate or recommend?</label>
+              <textarea name="Automation Opportunities" placeholder="e.g. recommend vehicle, calculate axle load, suggest loading sequence, flag non-compliance"></textarea>
+            </div>
+            <div class="field">
+              <label>What decisions must remain human-approved?</label>
+              <textarea name="Human Approval Required"></textarea>
+            </div>
+            <div class="field">
+              <label>What reports or outputs are required?</label>
+              <textarea name="Required Reports" placeholder="e.g. PDF load plan, driver instructions, compliance checklist, utilisation report"></textarea>
+            </div>
+          </div>
+
+          <div class="section" id="section-review">
+            <h2>11. Review & Export Report</h2>
+            <div class="section-help">Generate the BA discovery report. You can download it as an HTML file, print it, or save it as PDF from the browser.</div>
+            <div class="button-row">
+              <button type="button" class="btn-dark" onclick="generateReview()">Generate Review</button>
+              <button type="button" class="btn-success" onclick="downloadReport()">Download Report File</button>
+              <button type="button" class="btn-warning" onclick="window.print()">Print / Save as PDF</button>
+              <button type="button" class="btn-light" onclick="saveDraft()">Save Draft in Browser</button>
+            </div>
+            <div class="notice" id="notice">Done.</div>
+            <div class="review-box" id="reviewBox">Click “Generate Review” to preview the completed BA discovery report.</div>
+          </div>
+
+          <div class="actions">
+            <button type="button" class="btn-light" onclick="prevSection()">Back</button>
+            <div class="button-row">
+              <button type="button" class="btn-light" onclick="saveDraft()">Save Draft</button>
+              <button type="button" class="btn-primary" onclick="nextSection()">Next</button>
+            </div>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <div class="footer-note">
+      ELX Load Planning Discovery Portal — standalone local HTML form. No data is sent anywhere unless the generated report is emailed/shared manually.
+    </div>
+  </div>
+
+  <script>
+    const sections = Array.from(document.querySelectorAll('.section'));
+    const steps = Array.from(document.querySelectorAll('#steps li'));
+    let current = 0;
+
+    function showSection(index) {
+      current = Math.max(0, Math.min(index, sections.length - 1));
+      sections.forEach((section, i) => section.classList.toggle('active', i === current));
+      steps.forEach((step, i) => {
+        step.classList.toggle('active', i === current);
+        step.classList.toggle('done', i < current);
+      });
+      const progress = ((current + 1) / sections.length) * 100;
+      document.getElementById('progressBar').style.width = progress + '%';
+      document.getElementById('progressText').innerText = `Section ${current + 1} of ${sections.length}`;
+      document.querySelector('.actions .btn-primary').innerText = current === sections.length - 1 ? 'Finish' : 'Next';
+    }
+
+    function nextSection() {
+      if (current < sections.length - 1) {
+        showSection(current + 1);
+        if (current === sections.length - 1) generateReview();
+      } else {
+        generateReview();
+      }
+    }
+
+    function prevSection() {
+      showSection(current - 1);
+    }
+
+    function getFormData() {
+      const form = document.getElementById('discoveryForm');
+      const data = {};
+      const elements = Array.from(form.elements).filter(el => el.name);
+
+      elements.forEach(el => {
+        if (el.type === 'checkbox') {
+          if (!data[el.name]) data[el.name] = [];
+          if (el.checked) data[el.name].push(el.value);
+        } else if (el.type !== 'button') {
+          data[el.name] = el.value || '';
+        }
+      });
+
+      Object.keys(data).forEach(key => {
+        if (Array.isArray(data[key])) data[key] = data[key].join(', ');
+      });
+
+      return data;
+    }
+
+    function buildReportText() {
+      const data = getFormData();
+      const date = new Date().toLocaleString();
+
+      let report = '';
+      report += 'ELX LOAD PLANNING DISCOVERY REPORT\n';
+      report += 'Generated: ' + date + '\n';
+      report += '============================================================\n\n';
+
+      const groups = {
+        '1. Respondent Details': ['Respondent Name', 'Respondent Role', 'Department', 'Email'],
+        '2. Business Context': ['Transport Operations', 'Regions Serviced', 'Loads Per Day', 'Fleet Size', 'Customer Types'],
+        '3. Current As-Is Process': ['Load Planning Trigger', 'Current Process Steps', 'Systems Used'],
+        '4. Stakeholders & Decisions': ['Load Plan Creator', 'Vehicle Selector', 'Compliance Checker', 'Dispatch Approver', 'Stakeholders', 'Planning Decisions'],
+        '5. Vehicle & Trailer Selection': ['Vehicle Types', 'Vehicle Selection Method', 'Vehicle Selection Factors'],
+        '6. Cargo & Freight Details': ['Cargo Details Received', 'Missing Cargo Details', 'Hardest Freight Types'],
+        '7. Compliance & Safety': ['Compliance Checks', 'Difficult Compliance Checks', 'Safety Issues'],
+        '8. Warehouse, Loading & Dispatch': ['Warehouse Instructions Today', 'Loading Instructions Documented', 'Load Rework Frequency', 'Driver Instructions Needed'],
+        '9. Pain Points & Root Causes': ['Top Pain Points', 'Most Time Consuming Activity', 'Common Mistakes', 'Likely Root Causes'],
+        '10. Future State & Automation': ['Ideal System Capabilities', 'Automation Opportunities', 'Human Approval Required', 'Required Reports']
+      };
+
+      for (const [group, fields] of Object.entries(groups)) {
+        report += group + '\n';
+        report += '-'.repeat(group.length) + '\n';
+        fields.forEach(field => {
+          report += field + ':\n';
+          report += (data[field] && data[field].trim()) ? data[field] : '[Not provided]';
+          report += '\n\n';
+        });
+      }
+
+      report += 'BA NEXT STEPS\n';
+      report += '-------------\n';
+      report += '1. Validate responses with Operations, Fleet, Warehouse, Drivers, and Compliance.\n';
+      report += '2. Build As-Is process map and identify decision points.\n';
+      report += '3. Convert pain points into business requirements.\n';
+      report += '4. Define To-Be process and automation opportunities.\n';
+      report += '5. Create functional requirements, user stories, acceptance criteria, and solution blueprint.\n';
+
+      return report;
+    }
+
+    function generateReview() {
+      const report = buildReportText();
+      document.getElementById('reviewBox').innerText = report;
+      showNotice('Review generated.');
+    }
+
+    function downloadReport() {
+      const report = buildReportText();
+      const htmlReport = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>ELX Load Planning Discovery Report</title>
+  <style>
+    body { font-family: Arial, Helvetica, sans-serif; margin: 36px; color: #222; line-height: 1.5; }
+    h1 { color: #d71920; border-bottom: 4px solid #111; padding-bottom: 10px; }
+    pre { white-space: pre-wrap; font-family: Arial, Helvetica, sans-serif; }
+    .footer { margin-top: 30px; font-size: 12px; color: #666; }
+  </style>
+</head>
+<body>
+  <h1>ELX Load Planning Discovery Report</h1>
+  <pre>${escapeHtml(report)}</pre>
+  <div class="footer">Generated from ELX Load Planning Discovery Questionnaire.</div>
+</body>
+</html>`;
+
+      const blob = new Blob([htmlReport], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      const safeName = 'ELX_Load_Planning_Discovery_Report_' + new Date().toISOString().slice(0,10) + '.html';
+      a.href = url;
+      a.download = safeName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showNotice('Report downloaded. Open it and use Print > Save as PDF if needed.');
+    }
+
+    function saveDraft() {
+      const data = getFormData();
+      localStorage.setItem('elxLoadPlanningDiscoveryDraft', JSON.stringify(data));
+      showNotice('Draft saved in this browser.');
+    }
+
+    function loadDraft() {
+      const raw = localStorage.getItem('elxLoadPlanningDiscoveryDraft');
+      if (!raw) return;
+      const data = JSON.parse(raw);
+      const form = document.getElementById('discoveryForm');
+
+      Object.keys(data).forEach(name => {
+        const fields = Array.from(form.elements).filter(el => el.name === name);
+        fields.forEach(field => {
+          if (field.type === 'checkbox') {
+            const values = data[name].split(',').map(x => x.trim());
+            field.checked = values.includes(field.value);
+          } else {
+            field.value = data[name];
+          }
+        });
+      });
+    }
+
+    function showNotice(message) {
+      const notice = document.getElementById('notice');
+      notice.innerText = message;
+      notice.style.display = 'block';
+      setTimeout(() => notice.style.display = 'none', 3000);
+    }
+
+    function escapeHtml(text) {
+      return text.replace(/[&<>"']/g, function(match) {
+        return {
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#039;'
+        }[match];
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadDraft();
+      showSection(0);
+    });
+  </script>
+</body>
+</html>
